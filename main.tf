@@ -91,7 +91,7 @@ resource "aws_apigatewayv2_api" "api-path" {
   name          = "api-path-${random_id.id.hex}"
   protocol_type = "HTTP"
   target        = aws_lambda_function.lambda.arn
-	route_key = "ANY /test/{proxy+}"
+  route_key     = "ANY /test/{proxy+}"
 }
 
 resource "aws_lambda_permission" "apigw-path" {
@@ -148,7 +148,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   }
 
   ordered_cache_behavior {
-    path_pattern = "/test/*"
+    path_pattern     = "/test/*"
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "apigw_path"
@@ -179,13 +179,5 @@ resource "aws_cloudfront_distribution" "distribution" {
 }
 output "domain" {
   value = aws_cloudfront_distribution.distribution.domain_name
-}
-
-output "api2" {
-  value = aws_apigatewayv2_api.api-path.api_endpoint
-}
-
-output "api" {
-  value = aws_apigatewayv2_api.api.api_endpoint
 }
 
