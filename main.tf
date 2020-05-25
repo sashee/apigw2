@@ -13,7 +13,18 @@ data "archive_file" "lambda_zip" {
   source {
     content  = <<EOF
 module.exports.handler = async (event, context) => {
-	return event;
+	const realPath = event.pathParameters && event.pathParameters.proxy !== undefined ? `/$${event.pathParameters.proxy}` : event.requestContext.http.path;
+	return {
+		statusCode: 200,
+		headers: {
+			"Content-Type": "text/html",
+		},
+		body: `
+<p>real path: $${realPath}</p>
+<p>event object:</p>
+<pre>$${JSON.stringify(event, undefined, 4)}</pre>
+`
+	}
 };
 EOF
     filename = "main.js"
